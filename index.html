@@ -4,6 +4,27 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Proposal DIC-2026-06-001 — Dubai in Cairo</title>
+<meta name="description" id="m-desc" content="Commercial proposal DIC-2026-06-001 — eZee–Odoo Connector, ZATCA-aligned Accounting & HR implementation by Dubai in Cairo. Fixed scope, fixed price — 15,000 SAR (VAT inclusive).">
+<meta name="theme-color" content="#070b1c">
+<link rel="canonical" href="https://proposal.dubaiincairo.com/">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dubai in Cairo">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://proposal.dubaiincairo.com/">
+<meta property="og:title" id="m-ogtitle" content="Proposal DIC-2026-06-001 — Dubai in Cairo">
+<meta property="og:description" id="m-ogdesc" content="eZee–Odoo Connector, ZATCA-aligned Accounting & HR — fixed scope, fixed price, 15,000 SAR (VAT inclusive).">
+<meta property="og:image" id="m-ogimg" content="https://proposal.dubaiincairo.com/og-image.jpg">
+<meta property="og:image:secure_url" id="m-ogimg2" content="https://proposal.dubaiincairo.com/og-image.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dubai in Cairo — Proposal DIC-2026-06-001: eZee–Odoo Connector, Accounting & HR, 15,000 SAR VAT inclusive">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" id="m-twtitle" content="Proposal DIC-2026-06-001 — Dubai in Cairo">
+<meta name="twitter:description" id="m-twdesc" content="eZee–Odoo Connector, ZATCA-aligned Accounting & HR — fixed scope, fixed price, 15,000 SAR (VAT inclusive).">
+<meta name="twitter:image" id="m-twimg" content="https://proposal.dubaiincairo.com/og-image.jpg">
+<meta name="twitter:image:alt" content="Dubai in Cairo — Proposal DIC-2026-06-001">
 <style>
 :root{--bg:#070b1c;--ink:#eef3ff;--text:#c3cde6;--muted:#8a96b6;--cyan:#3ad6f0;--blue:#5b8cff;--violet:#b596ff;--gold:#f2cf6b;--gold-2:#ffe7a6;--card:rgba(255,255,255,.045);--card-2:rgba(255,255,255,.07);--border:rgba(255,255,255,.1);--border-2:rgba(255,255,255,.18);--r:18px;--maxw:1120px;--nav-h:70px;--e:cubic-bezier(.22,.61,.36,1)}
 *{box-sizing:border-box}
@@ -520,6 +541,7 @@ var GROUPS=[
  {t:'Exclusions',f:[['exclEyebrow','Eyebrow'],['exclTitle','Title'],['exclDesc','Description','a']],lines:['excl','Exclusions (one per line, HTML ok)']},
  {t:'Acceptance',f:[['acceptTitle','Title'],['acceptBody','Body','a'],['askLabel','"Ask a question" label']]},
  {t:'Footer',f:[['footerBrandDesc','About text','a'],['footerContactTitle','Contact heading'],['footerProposalTitle','Proposal heading'],['footerCopyright','Copyright line']]},
+ {t:'SEO & Social',f:[['seoTitle','Project name / page title'],['seoDesc','Description (search results + social preview)','a'],['ogImage','Social image URL (absolute, public)','t','e.g. https://proposal.dubaiincairo.com/og-image.jpg']],seo:true},
  {t:'Settings',f:[['web3key','Web3Forms access key (optional)','t','Set for automatic email; blank = use mail app']]}
 ];
 
@@ -537,6 +559,7 @@ function readDefaults(){
  m.currency=t('.v-cur');m.total=t('.v-total-num');m.net=stripCur(t('.bd-net'),m.currency);m.vat=stripCur(t('.bd-vat'),m.currency);
  m.waDisplay=t('.v-wa');var wf=$('#wa-fab');var mm=wf?(wf.getAttribute('href')||'').match(/wa\.me\/(\d+)/):null;m.waNumber=mm?mm[1]:'';m.waText=wf?(wf.getAttribute('data-text')||''):'';
  m.web3key='';
+ m.seoTitle=(document.title||'').trim();m.seoDesc=attr('#m-desc','content');m.ogImage=attr('#m-ogimg','content');
  m.about=$$('#about-cards .card').map(function(c){return {icon:(c.querySelector('.ic').getAttribute('data-icon')||'grid'),title:c.querySelector('h4').textContent.trim(),desc:c.querySelector('p').textContent.trim()};});
  m.scope=$$('#scope-list details').map(function(d){return {title:d.querySelector('.s-title strong').textContent.trim(),subtitle:d.querySelector('.s-title span').textContent.trim(),points:$$('.body li',d).map(function(li){return li.innerHTML.trim();})};});
  m.pay=$$('#pay-list .ms').map(function(x){return {pct:x.querySelector('.pct').textContent.trim(),label:x.querySelector('strong').textContent.trim(),amount:x.querySelector('.amt').textContent.trim(),desc:x.querySelector('p').textContent.trim()};});
@@ -566,6 +589,9 @@ function applyField(k){
   case 'waNumber':case 'waText':waApply();return;
   case 'waDisplay':setA('.v-wa',v);return;
   case 'web3key':return;
+  case 'seoTitle':document.title=v;['#m-ogtitle','#m-twtitle'].forEach(function(s){var e=$(s);if(e)e.setAttribute('content',v);});return;
+  case 'seoDesc':['#m-desc','#m-ogdesc','#m-twdesc'].forEach(function(s){var e=$(s);if(e)e.setAttribute('content',v);});return;
+  case 'ogImage':['#m-ogimg','#m-ogimg2','#m-twimg'].forEach(function(s){var e=$(s);if(e)e.setAttribute('content',v);});return;
  }
  var g=GEN[k];if(g){if(g[1])setA(g[0],v);else{var e=$(g[0]);if(e)e.textContent=v;}}
 }
@@ -585,7 +611,7 @@ function renderDeliv(){try{var c=$('#deliv-list'),bp=BP.deliv;if(!c||!bp)return;
 function renderExcl(){try{var c=$('#excl-list'),bp=BP.excl;if(!c||!bp)return;c.innerHTML='';(model.excl||[]).forEach(function(h){var n=bp.cloneNode(true);n.classList.remove('reveal');n.querySelector('span:last-child').innerHTML=h;c.appendChild(n);});}catch(e){}}
 
 function applyAll(){
- try{for(var k in GEN)applyField(k);['email','site','siteUrl','propNo','clientAr','issued','valid','currency','total','net','vat','waNumber','waText','waDisplay'].forEach(applyField);
+ try{for(var k in GEN)applyField(k);['email','site','siteUrl','propNo','clientAr','issued','valid','currency','total','net','vat','waNumber','waText','waDisplay','seoTitle','seoDesc','ogImage'].forEach(applyField);
  renderL('about');renderL('scope');renderL('pay');renderL('time');renderDeliv();renderExcl();meta();waApply();}catch(e){}
 }
 
@@ -597,6 +623,43 @@ function fld(key,label,type,hint){
  else ctl='<input id="'+id+'" type="text" data-k="'+key+'">';
  return '<div class="fld"><label>'+esc(label)+h+'</label>'+ctl+'</div>';
 }
+function seoUploaderHTML(){
+ return '<div class="fld"><label>Social image preview <span class="hi">(shown when the link is shared)</span></label>'
+  +'<img id="seo-img" alt="Social image preview" style="width:100%;max-width:330px;display:block;border-radius:10px;border:1px solid var(--border);background:#0a0e1f">'
+  +'<div id="seo-meta" style="font-size:11.5px;color:var(--muted);margin-top:6px"></div>'
+  +'<input id="seo-file" type="file" accept="image/png,image/jpeg,image/webp" hidden>'
+  +'<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button class="cb" type="button" id="seo-pick">Upload image…</button><button class="cb" type="button" id="seo-dl" disabled>Download as og-image.jpg</button></div>'
+  +'<div style="font-size:11.5px;color:var(--muted);line-height:1.55;margin-top:10px;border:1px solid var(--border);border-radius:10px;padding:11px;background:rgba(255,255,255,.02)">'
+  +'<b style="color:#bcd0ee">Recommended image specs</b><br>• Size: <b>1200 × 630 px</b> (1.91 : 1 ratio)<br>• Format: <b>JPG or PNG</b>, kept under <b>300 KB</b> (WhatsApp skips larger images)<br>• Keep the logo/text centred with ~10% safe margin<br><br>The image must live at a <b>public URL</b>. Upload here to preview &amp; check specs, click <b>Download</b>, commit the file to your site root as <b>og-image.jpg</b> (Vercel redeploys automatically), then point the <b>Social image URL</b> above at it. Social platforms cache previews — refresh via the Facebook Sharing Debugger or a fresh WhatsApp chat.'
+  +'</div></div>';
+}
+function wireSeo(){
+ try{
+  var imgEl=$('#seo-img'),metaEl=$('#seo-meta'),fileEl=$('#seo-file'),pick=$('#seo-pick'),dl=$('#seo-dl'),urlInput=$('#cf_ogImage'),picked=null;
+  function setMeta(s){if(metaEl)metaEl.innerHTML=s;}
+  function showUrl(u){if(!imgEl)return;imgEl.onerror=function(){imgEl.removeAttribute('src');};imgEl.src=u||'';}
+  showUrl(model.ogImage);setMeta(model.ogImage?('Live: '+esc(model.ogImage)):'No social image set yet.');
+  if(pick)pick.addEventListener('click',function(){fileEl.click();});
+  if(urlInput)urlInput.addEventListener('input',function(){if(picked)return;showUrl(urlInput.value);setMeta(urlInput.value?('Live: '+esc(urlInput.value)):'No social image set yet.');});
+  if(fileEl)fileEl.addEventListener('change',function(){
+   var f=this.files&&this.files[0];if(!f)return;var u=URL.createObjectURL(f);var probe=new Image();
+   probe.onload=function(){
+    var w=probe.naturalWidth,h=probe.naturalHeight,kb=f.size/1024,r=w/h,warn=[];
+    if(w<1200||h<630)warn.push('smaller than 1200×630');
+    if(Math.abs(r-1.9048)>0.12)warn.push('ratio '+r.toFixed(2)+':1 (aim ~1.91:1)');
+    if(kb>300)warn.push(Math.round(kb)+'KB (&gt;300KB — WhatsApp may skip it)');
+    setMeta(w+'×'+h+'px · '+Math.round(kb)+'KB · '+(warn.length?('⚠ '+warn.join('; ')):'✓ meets recommended specs'));
+    if(imgEl)imgEl.src=u;
+    var ext=f.type==='image/png'?'png':(f.type==='image/webp'?'webp':'jpg');
+    picked={blob:f,name:'og-image.'+ext};
+    if(dl){dl.disabled=false;dl.textContent='Download as '+picked.name;}
+   };
+   probe.onerror=function(){setMeta('Could not read that image file.');};
+   probe.src=u;
+  });
+  if(dl)dl.addEventListener('click',function(){if(!picked)return;var u=URL.createObjectURL(picked.blob);var a=document.createElement('a');a.href=u;a.download=picked.name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(u);a.remove();},800);toast('Downloaded '+picked.name+' — commit it to your site root');});
+ }catch(e){}
+}
 function buildForm(){
  var b=$('#cms-b');b.innerHTML='';
  GROUPS.forEach(function(g,gi){
@@ -604,6 +667,7 @@ function buildForm(){
   if(g.lines){html+='<div class="fld"><label>'+esc(g.lines[1])+'</label><textarea id="cl_'+g.lines[0]+'" data-lines="'+g.lines[0]+'" style="min-height:120px"></textarea></div>';}
   if(g.list){html+='<div id="rep_'+g.list+'"></div>';}
   (g.f2||[]).forEach(function(a){html+=fld(a[0],a[1],a[2],a[3]);});
+  if(g.seo){html+=seoUploaderHTML();}
   var d=document.createElement('details');d.className='cg';if(gi===0)d.setAttribute('open','');
   d.innerHTML='<summary>'+esc(g.t)+'</summary><div class="cgb">'+html+'</div>';
   b.appendChild(d);
@@ -613,6 +677,7 @@ function buildForm(){
   (g.f||[]).concat(g.f2||[]).forEach(function(a){var el=$('#cf_'+a[0]);if(el){el.value=model[a[0]]==null?'':model[a[0]];el.addEventListener('input',function(){model[a[0]]=el.value;applyField(a[0]);markDirty();});}});
   if(g.lines){var lk=g.lines[0];var le=$('#cl_'+lk);if(le){le.value=(model[lk]||[]).join('\n');le.addEventListener('input',function(){model[lk]=le.value.split('\n').map(function(x){return x.trim();}).filter(function(x){return x.length;});if(lk==='deliv')renderDeliv();else renderExcl();markDirty();});}}
   if(g.list)renderRep(g.list);
+  if(g.seo)wireSeo();
  });
 }
 function repItem(key,item,i){
