@@ -32,9 +32,9 @@ module.exports = async function handler(req, res) {
       res.status(400).json({ error: 'Name and a valid email are required.' });
       return;
     }
-    const key = process.env.RESEND_API_KEY;
+    const key = process.env.RESEND_API_KEY || process.env.RESEND || process.env.RESEND_KEY;
     if (!key) {
-      res.status(500).json({ error: 'Email service is not configured (missing RESEND_API_KEY).' });
+      res.status(500).json({ error: 'Email service is not configured (missing RESEND_API_KEY / RESEND).' });
       return;
     }
     const to = (process.env.ACCEPT_TO || 'info@dubaiincairo.com').split(',').map((s) => s.trim()).filter(Boolean);
