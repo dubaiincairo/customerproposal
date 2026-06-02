@@ -1,7 +1,7 @@
 // Vercel Serverless Function — emails proposal acceptances via Brevo (Sendinblue).
 // Required env: BREVO_PROPOSAL_API (Brevo API key). Optional:
 //   ACCEPT_TO         (default info@dubaiincairo.com)
-//   ACCEPT_FROM_EMAIL (default abdallahelfouly@gmail.com — must be a validated Brevo sender)
+//   ACCEPT_FROM_EMAIL (default proposals@dubaiincairo.com — domain-authenticated Brevo sender)
 //   ACCEPT_FROM_NAME  (default "Dubai in Cairo Proposals")
 module.exports = async function handler(req, res) {
   res.setHeader('Content-Type', 'application/json');
@@ -41,7 +41,7 @@ module.exports = async function handler(req, res) {
     }
     const to = (process.env.ACCEPT_TO || 'info@dubaiincairo.com')
       .split(',').map((s) => s.trim()).filter(Boolean).map((e) => ({ email: e }));
-    const senderEmail = process.env.ACCEPT_FROM_EMAIL || 'abdallahelfouly@gmail.com';
+    const senderEmail = process.env.ACCEPT_FROM_EMAIL || 'proposals@dubaiincairo.com';
     const senderName = process.env.ACCEPT_FROM_NAME || 'Dubai in Cairo Proposals';
 
     const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
