@@ -1,10 +1,12 @@
-// Vercel Serverless Function — emails proposal acceptances via Resend.
-// Required env: RESEND_API_KEY. Optional: ACCEPT_TO (default info@dubaiincairo.com),
-// ACCEPT_FROM (default uses Resend's shared onboarding sender).
+// Vercel Serverless Function — emails proposal acceptances via Brevo (Sendinblue).
+// Required env: BREVO_PROPOSAL_API (Brevo API key). Optional:
+//   ACCEPT_TO         (default info@dubaiincairo.com)
+//   ACCEPT_FROM_EMAIL (default abdallahelfouly@gmail.com — must be a validated Brevo sender)
+//   ACCEPT_FROM_NAME  (default "Dubai in Cairo Proposals")
 module.exports = async function handler(req, res) {
   res.setHeader('Content-Type', 'application/json');
   if (req.method === 'GET') {
-    res.status(200).json({ ok: true, service: 'accept', hint: 'POST a JSON acceptance to send it.' });
+    res.status(200).json({ ok: true, service: 'accept', provider: 'brevo' });
     return;
   }
   if (req.method !== 'POST') {
@@ -32,13 +34,15 @@ module.exports = async function handler(req, res) {
       res.status(400).json({ error: 'Name and a valid email are required.' });
       return;
     }
-    const key = process.env.RESEND_API_KEY || process.env.RESEND || process.env.RESEND_KEY;
+    const key = process.env.BREVO_PROPOSAL_API || process.env.BREVO_API_KEY || process.env.BREVO;
     if (!key) {
-      res.status(500).json({ error: 'Email service is not configured (missing RESEND_API_KEY / RESEND).' });
+      res.status(500).json({ error: 'Email service is not configured (missing BREVO_PROPOSAL_API).' });
       return;
     }
-    const to = (process.env.ACCEPT_TO || 'info@dubaiincairo.com').split(',').map((s) => s.trim()).filter(Boolean);
-    const from = process.env.ACCEPT_FROM || 'Dubai in Cairo Proposals <onboarding@resend.dev>';
+    const to = (process.env.ACCEPT_TO || 'info@dubaiincairo.com')
+      .split(',').map((s) => s.trim()).filter(Boolean).map((e) => ({ email: e }));
+    const senderEmail = process.env.ACCEPT_FROM_EMAIL || 'abdallahelfouly@gmail.com';
+    const senderName = process.env.ACCEPT_FROM_NAME || 'Dubai in Cairo Proposals';
 
     const esc = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     const row = (k, v) =>
@@ -56,15 +60,15 @@ module.exports = async function handler(req, res) {
       `<p style="margin:18px 0 0;font-size:12px;color:#999">Sent automatically from the Dubai in Cairo proposal microsite.</p>` +
       `</div>`;
 
-    const r = await fetch('https://api.resend.com/emails', {
+    const r = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
-      headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+      headers: { 'api-key': key, 'Content-Type': 'application/json', accept: 'application/json' },
       body: JSON.stringify({
-        from,
+        sender: { name: senderName, email: senderEmail },
         to,
-        reply_to: email,
+        replyTo: { email, name },
         subject: `Proposal Acceptance — ${proposal || 'DIC'} — ${name}`,
-        html,
+        htmlContent: html,
       }),
     });
     const data = await r.json().catch(() => ({}));
@@ -72,8 +76,8 @@ module.exports = async function handler(req, res) {
       res.status(502).json({ error: 'Email could not be sent.', detail: data });
       return;
     }
-    res.status(200).json({ success: true, id: data.id });
+    res.status(200).json({ success: true, id: data.messageId || true });
   } catch (e) {
     res.status(500).json({ error: String((e && e.message) || e) });
   }
-}
+};
